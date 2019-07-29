@@ -14,10 +14,33 @@
 			class Matrix {
 				constructor(contents) {
 					this.contents = contents;
+					this.rows = contents.length;
+					this.cols = contents[0].length;
+				}
+
+				setIndex(row, col, value) {
+					this.contents[row][col] = value;
+				}
+
+				getIndex(row, col) {
+					return this.contents[row][col];
 				}
 
 				static add(matrix1, matrix2) {
-					return;  // @TODO
+					// Matrix addition only applies to same-size matrices
+					if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
+						throw new TypeError("Arguments to Matrix.add must have the same dimensions.")
+					}
+
+					let sum = [];
+					for (let row = 0; row < matrix1.rows; row++) {
+						sum[row] = [];
+						for (let col = 0; col < matrix1.cols; col++) {
+							sum[row][col] = matrix1.getIndex(row, col) + matrix2.getIndex(row, col);
+						}
+					}
+
+					return new Matrix(sum);
 				}
 
 				static multiply(matrix1, matrix2) {
