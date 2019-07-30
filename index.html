@@ -18,18 +18,44 @@
 					this.cols = contents[0].length;
 				}
 
-				setIndex(row, col, value) {
-					this.contents[row][col] = value;
-				}
-
+				// get the contents of the Matrix at index (row, col)
 				getIndex(row, col) {
+					if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
+						return new Error("Invalid index passed to Matrix.getIndex.");
+					}
 					return this.contents[row][col];
 				}
 
+				// set the contents of the Matrix at index (row, col)
+				setIndex(row, col, value) {
+					if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
+						return new Error("Invalid index passed to Matrix.setIndex.");
+					}
+					this.contents[row][col] = value;
+				}
+
+				// return the specified row as a Vector
+				getRow(rowIndex) {
+					if (rowIndex < 0 || rowIndex >= this.rows) {
+						return new Error("Invalid index passed to Matrix.getRow.");
+					}
+
+					return new Vector(this.contents[rowIndex]);
+				}
+
+				// return the specified column as a Vector
+				getCol(colIndex) {
+					if (colIndex < 0 || colIndex >= this.cols) {
+						return new Error("Invalid index passed to Matrix.getCol.");
+					}
+
+					return new Vector(this.contents.map(row => row[colIndex]));
+				}
+
+				// return the sum of the the two Matrices
 				static add(matrix1, matrix2) {
-					// Matrix addition only applies to same-size matrices
 					if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
-						throw new TypeError("Arguments to Matrix.add must have the same dimensions.")
+						throw new Error("Arguments to Matrix.add must have the same dimensions.");
 					}
 
 					let sum = [];
@@ -45,6 +71,30 @@
 
 				static multiply(matrix1, matrix2) {
 					return;  // @TODO
+				}
+			}
+
+			class Vector extends Matrix {
+				constructor(contents) {
+					super(contents);
+
+					// always make the Vector a row vector
+					// see https://stackoverflow.com/a/10865042
+					this.contents = [].concat.apply([], contents);
+				}
+
+				// return the dot product of the two Vectors
+				static dot(vector1, vector2) {
+					if (vector1.contents.length != vector2.contents.length) {
+						throw new TypeError("Arguments to Vector.dot must have the same dimensions.");
+					}
+
+					let output = 0;
+					for (let i = 0; i < vector1.contents.length; i++) {
+						output += vector1.contents[i] * vector2.contents[i];
+					}
+
+					return output;
 				}
 			}
 
