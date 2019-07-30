@@ -52,10 +52,10 @@
 					return new Vector(this.contents.map(row => row[colIndex]));
 				}
 
-				// return the sum of the the two Matrices
+				// return the sum of the two Matrices
 				static add(matrix1, matrix2) {
 					if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
-						throw new Error("Arguments to Matrix.add must have the same dimensions.");
+						throw new Error("Arguments to Matrix.add don't have the same dimensions.");
 					}
 
 					let sum = [];
@@ -69,8 +69,21 @@
 					return new Matrix(sum);
 				}
 
+				// return the product of the two Matrices
 				static multiply(matrix1, matrix2) {
-					return;  // @TODO
+					if (matrix1.cols != matrix2.rows) {
+						throw new Error("For Matrix.multiply, the first argument's column count doesn't equal the second's row count.");
+					}
+
+					let product = [];
+					for (let rowIndex = 0; rowIndex < matrix1.rows; rowIndex++) {
+						product[rowIndex] = [];
+						for (let colIndex = 0; colIndex < matrix2.cols; colIndex++) {
+							product[rowIndex][colIndex] = Vector.dot(matrix1.getRow(rowIndex), matrix2.getCol(colIndex));
+						}
+					}
+
+					return new Matrix(product);
 				}
 			}
 
@@ -86,7 +99,7 @@
 				// return the dot product of the two Vectors
 				static dot(vector1, vector2) {
 					if (vector1.contents.length != vector2.contents.length) {
-						throw new TypeError("Arguments to Vector.dot must have the same dimensions.");
+						throw new TypeError("Arguments to Vector.dot don't have the same dimensions.");
 					}
 
 					let output = 0;
