@@ -87,19 +87,71 @@ class Vector extends Matrix {
 	// Passing in an empty 1D array or a non-1D array causes undefined behavior.
 	constructor(contents) {
 		super([contents]);
+		// Note that the super call causes this.contents to be a 2D array.
+		// It's useful to make this.contents 2D since that makes
+		// Vector * Matrix multiplication simpler.
 	}
 
 	// return the dot product of the two Vectors
 	static dot(vector1, vector2) {
-		if (vector1.contents.length != vector2.contents.length) {
+		if (vector1.contents[0].length != vector2.contents[0].length) {
 			throw new TypeError("Arguments to Vector.dot don't have the same dimensions.");
 		}
 
 		let output = 0;
-		for (let i = 0; i < vector1.contents.length; i++) {
-			output += vector1.contents[i] * vector2.contents[i];
+		for (let i = 0; i < vector1.contents[0].length; i++) {
+			output += vector1.contents[0][i] * vector2.contents[0][i];
 		}
 
 		return output;
 	}
+}
+
+// A Vector of the form [x, y, z, 1] used to represent Coordinate positions
+// in a CoordinateSystem. This particular format is useful for switching between
+// CoordinateSystems.
+class PositionVector extends Vector {
+	// 3 separate arguments x, y, z are passed in to construct a PositionVector.
+	// Passing in an array causes undefined behavior.
+	constructor(x, y, z) {
+		super([x, y, z, 1]);
+	}
+
+	// Rotates the PositionVector about the x axis by the specified angle.
+	// The angle is in radians, and its positive direction is given by the
+	// right-hand rule when your thumb points in the +x direction.
+	rotateX(angle) {
+		this.contents = Matrix.multiply(this, new Matrix([
+				[1, 0, 0, 0],
+				[0, Math.cos(angle), Math.sin(angle), 0],
+				[0, -Math.sin(angle), Math.cos(angle), 0],
+				[0, 0, 0, 1]
+			])).contents;
+	}
+
+	// Rotates the PositionVector about the y axis by the specified angle.
+	// The angle is in radians, and its positive direction is given by the
+	// right-hand rule when your thumb points in the +y direction.
+	rotateY(angle) {
+		this.contents = Matrix.multiply(this, new Matrix([
+				[Math.cos(angle), 0, -Math.sin(angle), 0],
+				[0, 1, 0, 0],
+				[Math.sin(angle), 0, Math.cos(angle), 0],
+				[0, 0, 0, 1]
+			])).contents;
+	}
+
+	// Rotates the PositionVector about the z axis by the specified angle.
+	// The angle is in radians, and its positive direction is given by the
+	// right-hand rule when your thumb points in the +z direction.
+	rotateZ(angle) {
+		this.contents = Matrix.multiply(this, new Matrix([
+				[Math.cos(angle), Math.sin(angle), 0, 0],
+				[-Math.sin(angle), Math.cos(angle), 0, 0],
+				[0, 0, 1, 0],
+				[0, 0, 0, 1]
+			])).contents;
+	}
+
+
 }
