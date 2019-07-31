@@ -1,13 +1,18 @@
 // Matrix and Vector classes.
 
 class Matrix {
+	// A 2D array with at least 1 entry is passed in to construct a Matrix.
+	// Note that each nested array within the 2D array is a row.
+	// For example, [[1, 2, 3]] is a row matrix, while [[1], [2], [3]] is a
+	// column matrix.
+	// Passing in an empty 2D array or a non-2D array causes undefined behavior.
 	constructor(contents) {
 		this.contents = contents;
 		this.rows = contents.length;
 		this.cols = contents[0].length;
 	}
 
-	// get the contents of the Matrix at index (row, col)
+	// Get the contents of the Matrix at index (row, col).
 	getIndex(row, col) {
 		if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
 			return new Error("Invalid index passed to Matrix.getIndex.");
@@ -15,7 +20,7 @@ class Matrix {
 		return this.contents[row][col];
 	}
 
-	// set the contents of the Matrix at index (row, col)
+	// Set the contents of the Matrix at index (row, col).
 	setIndex(row, col, value) {
 		if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) {
 			return new Error("Invalid index passed to Matrix.setIndex.");
@@ -23,7 +28,7 @@ class Matrix {
 		this.contents[row][col] = value;
 	}
 
-	// return the specified row as a Vector
+	// Return the specified row as a Vector.
 	getRow(rowIndex) {
 		if (rowIndex < 0 || rowIndex >= this.rows) {
 			return new Error("Invalid index passed to Matrix.getRow.");
@@ -32,7 +37,7 @@ class Matrix {
 		return new Vector(this.contents[rowIndex]);
 	}
 
-	// return the specified column as a Vector
+	// Return the specified column as a Vector.
 	getCol(colIndex) {
 		if (colIndex < 0 || colIndex >= this.cols) {
 			return new Error("Invalid index passed to Matrix.getCol.");
@@ -41,7 +46,7 @@ class Matrix {
 		return new Vector(this.contents.map(row => row[colIndex]));
 	}
 
-	// return the sum of the two Matrices
+	// Return the sum of the two Matrices.
 	static add(matrix1, matrix2) {
 		if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
 			throw new Error("Arguments to Matrix.add don't have the same dimensions.");
@@ -58,7 +63,7 @@ class Matrix {
 		return new Matrix(sum);
 	}
 
-	// return the product of the two Matrices
+	// Return the product of the two Matrices.
 	static multiply(matrix1, matrix2) {
 		if (matrix1.cols != matrix2.rows) {
 			throw new Error("For Matrix.multiply, the first argument's column count doesn't equal the second's row count.");
@@ -76,13 +81,12 @@ class Matrix {
 	}
 }
 
+// A Matrix with exactly 1 row
 class Vector extends Matrix {
+	// A 1D array with at least 1 entry is passed in to construct a Vector.
+	// Passing in an empty 1D array or a non-1D array causes undefined behavior.
 	constructor(contents) {
-		super(contents);
-
-		// always make the Vector a row vector
-		// see https://stackoverflow.com/a/10865042
-		this.contents = [].concat.apply([], contents);
+		super([contents]);
 	}
 
 	// return the dot product of the two Vectors
