@@ -1,4 +1,4 @@
-// Matrix and Vector classes.
+// Matrix and PositionVector classes.
 
 class Matrix {
 	// A 2D array with at least 1 entry is passed in to construct a Matrix.
@@ -28,24 +28,6 @@ class Matrix {
 		this.contents[row][col] = value;
 	}
 
-	// Return the specified row as a Vector.
-	getRow(rowIndex) {
-		if (rowIndex < 0 || rowIndex >= this.rows) {
-			return new Error("Invalid index passed to Matrix.getRow.");
-		}
-
-		return new Vector(this.contents[rowIndex]);
-	}
-
-	// Return the specified column as a Vector.
-	getCol(colIndex) {
-		if (colIndex < 0 || colIndex >= this.cols) {
-			return new Error("Invalid index passed to Matrix.getCol.");
-		}
-
-		return new Vector(this.contents.map(row => row[colIndex]));
-	}
-
 	// Return the sum of the two Matrices.
 	static add(matrix1, matrix2) {
 		if (matrix1.rows != matrix2.rows || matrix1.cols != matrix2.cols) {
@@ -73,7 +55,10 @@ class Matrix {
 		for (let rowIndex = 0; rowIndex < matrix1.rows; rowIndex++) {
 			product[rowIndex] = [];
 			for (let colIndex = 0; colIndex < matrix2.cols; colIndex++) {
-				product[rowIndex][colIndex] = Vector.dot(matrix1.getRow(rowIndex), matrix2.getCol(colIndex));
+				product[rowIndex][colIndex] = 0;
+				for (let i = 0; i < matrix1.cols; i++) {
+					product[rowIndex][colIndex] += matrix1.contents[rowIndex][i] * matrix2.contents[i][colIndex];
+				}
 			}
 		}
 
@@ -81,40 +66,14 @@ class Matrix {
 	}
 }
 
-// A Matrix with exactly 1 row
-class Vector extends Matrix {
-	// A 1D array with at least 1 entry is passed in to construct a Vector.
-	// Passing in an empty 1D array or a non-1D array causes undefined behavior.
-	constructor(contents) {
-		super([contents]);
-		// Note that the super call causes this.contents to be a 2D array.
-		// It's useful to make this.contents 2D since that makes
-		// Vector * Matrix multiplication simpler.
-	}
-
-	// return the dot product of the two Vectors
-	static dot(vector1, vector2) {
-		if (vector1.contents[0].length != vector2.contents[0].length) {
-			throw new TypeError("Arguments to Vector.dot don't have the same dimensions.");
-		}
-
-		let output = 0;
-		for (let i = 0; i < vector1.contents[0].length; i++) {
-			output += vector1.contents[0][i] * vector2.contents[0][i];
-		}
-
-		return output;
-	}
-}
-
-// A Vector of the form [x, y, z, 1] used to represent Coordinate positions
+// A Matrix of the form [[x, y, z, 1]] used to represent Coordinate positions
 // in a CoordinateSystem. This particular format is useful for switching between
 // CoordinateSystems.
-class PositionVector extends Vector {
+class PositionVector extends Matrix {
 	// 3 separate arguments x, y, z are passed in to construct a PositionVector.
 	// Passing in an array causes undefined behavior.
 	constructor(x, y, z) {
-		super([x, y, z, 1]);
+		super([[x, y, z, 1]]);
 	}
 
 	// Rotates the PositionVector about the x axis by the specified angle.
@@ -152,6 +111,4 @@ class PositionVector extends Vector {
 				[0, 0, 0, 1]
 			])).contents;
 	}
-
-
 }
