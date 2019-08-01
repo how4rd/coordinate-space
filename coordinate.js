@@ -62,7 +62,7 @@ class Coordinate {
 
 	// Return the Coordinate's position in the specified CoordinateSystem
 	// as a PositionVector.
-	static getPositionVectorInSystem(otherSystem) {
+	getPositionVectorInSystem(otherSystem) {
 		if (this.system == otherSystem) {
 			return this.getPositionVector();
 		}
@@ -107,5 +107,26 @@ class Coordinate {
 		}
 
 		return otherVector;
+	}
+
+	// Return a copy of the current Coordinate.
+	// The x/y/z in the copied Item are distinct from the original Item
+	// (so moving around the copy won't affect the original). However the
+	// CoordinateSpace is the same as the original (as opposed to an identical
+	// copy).
+	copy() {
+		return new Coordinate(this.x, this.y, this.z, this.system);
+	}
+	
+	// Return a copy of the current Coordinate, re-expressed in the given
+	// CoordinateSystem.
+	// The x/y/z in the copied Item are distinct from the original Item
+	// (so moving around the copy won't affect the original). However the
+	// CoordinateSpace is the same as the original (as opposed to an identical
+	// copy).
+	copyIntoCoordinateSystem(otherSystem) {
+		const newPosition = this.getPositionVectorInSystem(otherSystem);
+		return new Coordinate(newPosition.x, newPosition.y, newPosition.z,
+			otherSystem);
 	}
 }

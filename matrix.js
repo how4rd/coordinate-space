@@ -74,6 +74,9 @@ class PositionVector extends Matrix {
 	// Passing in an array causes undefined behavior.
 	constructor(x, y, z) {
 		super([[x, y, z, 1]]);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	// Rotates the PositionVector about the x axis by the specified angle.

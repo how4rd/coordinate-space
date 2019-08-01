@@ -21,6 +21,25 @@ class Item {
 	getAdjacentVertexIndexes(i) {
 		throw new Error("Function 'getAdjacentVertexIndexes' must be implemented.");
 	}
+
+	// Return a copy of the current Item.
+	// The vertices in the copied Item are distinct from the original Item
+	// (so moving around the copy won't affect the original). However the
+	// CoordinateSpace is the same as the original (as opposed to an identical
+	// copy).
+	copy() {
+		throw new Error("Function 'copy' must be implemented.");
+	}
+
+	// Return a deep copy of the current Item, re-expressed in the given
+	// CoordinateSystem.
+	// The vertices in the copied Item are distinct from the original Item
+	// (so moving around the copy won't affect the original). However the
+	// CoordinateSpace is the same as the original (as opposed to an identical
+	// copy).
+	copyIntoCoordinateSystem(otherSystem) {
+		throw new Error("Function 'copyIntoCoordinateSystem' must be implemented.");
+	}
 }
 
 class Polygon extends Item {
@@ -31,6 +50,14 @@ class Polygon extends Item {
 	getAdjacentVertexIndexes(i) {
 		return;  // @TODO
 	}
+
+	copy() {
+		return new PolygonLineSegment(this.vertices.map(vertex => vertex.copy()));
+	}
+
+	copyIntoCoordinateSystem(otherSystem) {
+		return new PolygonLineSegment(this.vertices.map(vertex => vertex.copyIntoCoordinateSystem(otherSystem)));
+	}
 }
 
 class LineSegment extends Item {
@@ -40,5 +67,13 @@ class LineSegment extends Item {
 
 	getAdjacentVertexIndexes(i) {
 		return;  // @TODO
+	}
+
+	copy() {
+		return new LineSegment(this.vertices.map(vertex => vertex.copy()));
+	}
+
+	copyIntoCoordinateSystem(otherSystem) {
+		return new LineSegment(this.vertices.map(vertex => vertex.copyIntoCoordinateSystem(otherSystem)));
 	}
 }
