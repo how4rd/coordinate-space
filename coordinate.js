@@ -40,6 +40,44 @@ class CoordinateSystem {
 		this.xRot += angle;
 		this.yRot += angle;
 	}
+
+	// Find where the line segment between two Coordinates in the current
+	// CoordinateSystem intersects the plane z = -planeZ. Return the Coordinate
+	// of that intersection if there is a single intersection point; otherwise
+	// return null.
+	findLinePlaneIntersection(c1, c2, planeZ) {
+		// both Coordinates must lie in the current CoordinateSystem
+		if (c1.system != this) {
+			throw new Error("The first coordinate passed into" +
+				" CoordinateSystem.findLinePlaneIntersection is not expressed" +
+				" in terms of the correct CoordinateSystem.");
+		}
+
+		if (c2.system != this) {
+			throw new Error("The second coordinate passed into" +
+				" CoordinateSystem.findLinePlaneIntersection is not expressed" +
+				" in terms of the correct CoordinateSystem.");
+		}
+
+		// if line segment doesn't intersect plane in exactly 1 place...
+		if ((c1.z > 0 && c2.z > 0) || (c1.z == 0 && c2.z == 0) ||
+			(c1.z < 0 && c2.z < 0)) {
+			return null;
+		} else {  // line segment intersects plane in exactly 1 place
+
+			// Call the intersection point cMid.
+			// The equations relating the 3 Coordinates' positions are:
+			// 1: cMid.x = c1.x + m(c2.x - c1.x)
+			// 2: cMid.y = c1.y + m(c2.y - c1.y)
+			// 3: cMid.z = c1.z + m(c2.z - c1.z)
+
+			// First, rearrange 3 to solve for m, noting that cMid.z = -planeZ
+			const m = (-planeZ - c1.z) / (c2.z - c1.z);
+
+			// Then plug m into 1 and 2 to solve for its x and y coordinates
+			return new Coordinate(c1.x + m*(c2.x - c1.x),
+				c1.y + m*(c2.y - c1.y), -planeZ, this)
+		}
 }
 
 class Coordinate {
@@ -117,7 +155,7 @@ class Coordinate {
 	copy() {
 		return new Coordinate(this.x, this.y, this.z, this.system);
 	}
-	
+
 	// Return a copy of the current Coordinate, re-expressed in the given
 	// CoordinateSystem.
 	// The x/y/z in the copied Item are distinct from the original Item
