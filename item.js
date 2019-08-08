@@ -26,7 +26,7 @@ class Item {
 	getAdjacentVertexIndexes(i) {
 		let neighbors = [];
 
-		if (i < 0 || i > ) {
+		if (i < 0 || i >= this.vertices.length) {
 			throw new Error("Passed invalid index " + i + " into getAdjacentVertexIndexes.");
 		}
 
