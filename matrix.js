@@ -125,13 +125,13 @@ class PositionVector extends Matrix {
 			])).contents;
 	}
 
-	// Translates the PositionVector by the specified x, y, z.
-	translate(x, y, z) {
+	// Translates the PositionVector by the specified deltaX, deltaY, deltaZ.
+	translate(deltaX, deltaY, deltaZ) {
 		this.contents = Matrix.multiply(this, new Matrix([
 			[1, 0, 0, 0],
 			[0, 1, 0, 0],
 			[0, 0, 1, 0],
-			[x, y, z, 1]
+			[deltaX, deltaY, deltaZ, 1]
 		])).contents;
 	}
 }

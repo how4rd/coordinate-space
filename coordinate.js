@@ -41,6 +41,12 @@ class CoordinateSystem {
 		this.yRot += angle;
 	}
 
+	// Translate the CoordinateSystem's origin relative to the world system by
+	// the specified deltaX, deltaY, deltaZ
+	translate(deltaX, deltaY, deltaZ) {
+		this.origin.translate(deltaX, deltaY, deltaZ);
+	}
+
 	// Find where the line segment between two Coordinates in the current
 	// CoordinateSystem intersects the plane z = planeZ. Return the Coordinate
 	// of that intersection if there is a single intersection point; otherwise
@@ -86,24 +92,34 @@ class Coordinate {
 	// If the CoordinateSystem is not specified, it is assumed to be the
 	// world system.
 	constructor(x, y, z, system = null) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.position = new PositionVector(x, y, z);
 		this.system = system;
 	}
 
-	// Return the Coordinate's position in its current CoordinateSystem
-	// as a PositionVector.
-	// This format is useful for switching between coordinate systems.
-	getPositionVector() {
-		return new PositionVector(this.x, this.y, this.z);
+	get x() {
+		return this.position.x;
 	}
 
+	get y() {
+		return this.position.y;
+	}
+
+	get z() {
+		return this.position.z;
+	}
+
+	// Translate the Coordinate by the specified deltaX, deltaY, deltaZ
+	translate(deltaX, deltaY, deltaZ) {
+		this.position.translate(deltaX, deltaY, deltaZ);
+	}
+
+
+	// Helper function for copyIntoCoordinateSystem.
 	// Return the Coordinate's position in the specified CoordinateSystem
 	// as a PositionVector.
 	getPositionVectorInSystem(otherSystem) {
 		if (this.system == otherSystem) {
-			return this.getPositionVector();
+			return this.position;
 		}
 
 		// Since all CoordinateSystems are defined relative to the world system,
