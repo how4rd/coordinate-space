@@ -134,31 +134,62 @@ class Coordinate {
 
 		// if we're not already in the world system, switch to it
 		if (this.system != null) {
-			// When we set up a CoordinateSystem, we start with a copy of the
-			// world system. We rotate its x, y, and z axes, then we translate
-			// its origin.
+			// When we set up this.system, we started with a copy of the
+			// world system.
+			// We rotated its x, y, and z axes by
+			// this.system.xRot, this.system.yRot, this.system.zRot.
+			// We translated it by
+			// this.system.origin.x, this.system.origin.y, this.system.origin.z.
+
+			// So, the vector's coordinates can be expressed in multiple ways:
+			// xInWorldSystem = this.system.origin.x + xInThisSystem
+			// (same goes for y and z).
+
+			// Likewise the vector's rotation angles can be expressed as
+			// xRotInWorldSystem = this.system.xRot + xRotInThisSystem
+			// (same goes for yRot and zRot).
+
+			// From these equations, we can see that to re-express a local
+			// vector in the world system, you have to perform these operations.
 
 			// So, to undo this, we translate its origin back, then we rotate
 			// the z, y, and x axes the opposite direction as before.
 			// Performing the 4 undo operations on our PositionVector will get
 			// switch it to the world system.
-			otherVector.translate(-this.system.origin.x, -this.system.origin.y,
-				-this.system.origin.z);
-			otherVector.rotateZ(-this.system.zRot);
-			otherVector.rotateY(-this.system.yRot);
-			otherVector.rotateX(-this.system.xRot);
+			otherVector.translate(this.system.origin.x, this.system.origin.y,
+				this.system.origin.z);
+			otherVector.rotateZ(this.system.zRot);
+			otherVector.rotateY(this.system.yRot);
+			otherVector.rotateX(this.system.xRot);
 		}
 
 		// if we don't want to stay in the world system, switch out of it
 		if (otherSystem != null) {
-			// We're in the world system, so to move out of it we perform the
-			// exact same operations we would when creating a new system from
-			// scratch: rotate x, rotate y, rotate z, translate origin.
-			otherVector.rotateX(otherSystem.xRot);
-			otherVector.rotateY(otherSystem.yRot);
-			otherVector.rotateZ(otherSystem.zRot);
-			otherVector.translate(otherSystem.origin.x, otherSystem.origin.y,
-				otherSystem.origin.z);
+
+			// When we set up otherSystem, we started with a copy of the
+			// world system.
+			// We rotated its x, y, and z axes by
+			// otherSystem.xRot, otherSystem.yRot, otherSystem.zRot.
+			// We translated it by
+			// otherSystem.origin.x, otherSystem.origin.y, otherSystem.origin.z.
+
+			// So, the vector's coordinates can be expressed in multiple ways:
+			// xInWorldSystem = otherSystem.origin.x + xInOtherSystem, so
+			// xInOtherSystem = xInWorldSystem - otherSystem.origin.x
+			// (same goes for y and z).
+
+			// Likewise the vector's rotation angles can be expressed as
+			// xRotInWorldSystem = otherSystem.xRot + xRotInOtherSystem, so
+			// xRotInOtherSystem = xRotInWorldSystem - otherSystem.xRot
+			// (same goes for yRot and zRot).
+
+			// From these equations, we can see that to re-express a world
+			// vector in the local system, you have to perform these operations.
+			otherVector.rotateX(-otherSystem.xRot);
+			otherVector.rotateY(-otherSystem.yRot);
+			otherVector.rotateZ(-otherSystem.zRot);
+			otherVector.translate(-otherSystem.origin.x, -otherSystem.origin.y,
+				-otherSystem.origin.z);
 		}
 
 		return otherVector;

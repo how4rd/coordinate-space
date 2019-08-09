@@ -54,12 +54,13 @@ class Item {
 		throw new Error("Function 'copyIntoCoordinateSystem' must be implemented.");
 	}
 
-	// Helper function for project.
+	// Helper function for projectOntoPlane.
 	// Slice the Item with a plane occupying z = sliceZ in the Item's
 	// CoordinateSystem, so that afterword the Item is the slice where
 	// z <= sliceZ.
 	slice(sliceZ) {
 		let slicedVertices = [];
+		let intersectionVertex = null;
 		for (let i = 0; i < this.vertices.length; i++) {
 			// If a vertex is behind the image plane, then it doesn't appear
 			// on the image plane. However, line segments connected to that
@@ -74,18 +75,23 @@ class Item {
 			// vertices with z > sliceZ don't appear in the slice, but if
 			// they're connected to other points behind the slice, those lines
 			// cut through the plane z = sliceZ and could appear in the slice
-			if (this.vertices[i].z >= sliceZ) {
-				slicedVertices += this.vertices[i];
+			if (this.vertices[i].z <= sliceZ) {
+				slicedVertices.push(this.vertices[i]);
 			} else {
 				for (let j in this.getAdjacentVertexIndexes(i)) {
 					// If the neighbor is on the other side of the z = sliceZ
 					// plane, then the line from this vertex to the neighbor
 					// passes through the plane. Therefore the line has a
 					// corresponding point on the plane.
-					slicedVertices += this.system.findLinePlaneIntersection(item.vertices[i], item.vertices[j], sliceZ);
+					intersectionVertex = this.system.findLinePlaneIntersection(this.vertices[i],
+						this.vertices[j], sliceZ);
+					if (intersectionVertex != null) {
+						slicedVertices.push(intersectionVertex);
+					}
 				}
 			}
 		}
+		this.vertices = slicedVertices;
 	}
 
 	// If you were viewing the Item from a Coordinate viewpoint, and a plane
