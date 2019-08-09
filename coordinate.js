@@ -130,7 +130,7 @@ class Coordinate {
 		// This could be done with one big matrix multiplication, but for
 		// clarity we break it up into steps.
 
-		let otherVector = this.getPositionVector();
+		let otherVector = this.position.copy();
 
 		// if we're not already in the world system, switch to it
 		if (this.system != null) {

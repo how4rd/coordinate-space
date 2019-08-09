@@ -134,4 +134,9 @@ class PositionVector extends Matrix {
 			[deltaX, deltaY, deltaZ, 1]
 		])).contents;
 	}
+
+	// Returns a copy of the PositionVector
+	copy() {
+		return new PositionVector(this.x, this.y, this.z);
+	}
 }

@@ -25,21 +25,14 @@ class Item {
 	// (corresponding to vertices in the Item) that are adjacent to
 	// this.vertices[i].
 	getAdjacentVertexIndexes(i) {
-		let neighbors = [];
-
 		if (i < 0 || i >= this.vertices.length) {
 			throw new Error("Passed invalid index " + i + " into getAdjacentVertexIndexes.");
 		}
 
-		if (i > 0) {
-			neighbors += i - 1;
-		}
-
-		if (i + 1 < this.vertices.length) {
-			neighbors += i + 1;
-		}
-
-		return neighbors;
+		// return the previous and next vertices, wrapping around the array of
+		// vertices if needed
+		return [(i-1 + this.vertices.length) % this.vertices.length,
+			(i+1) % this.vertices.length];
 	}
 
 	// Return a copy of the current Item.
