@@ -20,25 +20,22 @@ class CoordinateSystem {
 		this.origin = origin;
 	}
 
-	// Rotate the CoordinateSystem about its own x axis by the specified angle
-	// (positive direction given by the right-hand rule).
+	// Rotate the CoordinateSystem's x axis by the specified angle relative to
+	// the world system's (positive direction given by the right-hand rule).
 	rotateX(angle) {
-		this.yRot += angle;
-		this.zRot += angle;
+		this.xRot += angle;
 	}
 
-	// Rotate the CoordinateSystem about its own y axis by the specified angle
-	// (positive direction given by the right-hand rule).
+	// Rotate the CoordinateSystem's y axis by the specified angle relative to
+	// the world system's (positive direction given by the right-hand rule).
 	rotateY(angle) {
-		this.xRot += angle;
-		this.zRot += angle;
+		this.yRot += angle;
 	}
 
-	// Rotate the CoordinateSystem about its own z axis by the specified angle
-	// (positive direction given by the right-hand rule).
+	// Rotate the CoordinateSystem's z axis by the specified angle relative to
+	// the world system's (positive direction given by the right-hand rule).
 	rotateZ(angle) {
-		this.xRot += angle;
-		this.yRot += angle;
+		this.zRot += angle;
 	}
 
 	// Translate the CoordinateSystem's origin relative to the world system by
