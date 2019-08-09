@@ -32,7 +32,7 @@ class Camera {
 			let pictureItem = items[i].copyIntoCoordinateSystem(this.system);
 
 			// map the Item onto the image plane
-			pictureItem.projectOntoPlane(-imagePlaneDistance, origin);
+			pictureItem.projectOntoPlane(-this.imagePlaneDistance, origin);
 
 			// map the Item's Coordinates into 2D coordinates on the canvas...
 			// In the CoordinateSystem, the image plane extends from
@@ -50,7 +50,7 @@ class Camera {
 
 			// for each vertex, draw line segment to its neighbors
 			// note this draws each line segment twice (one for each vertex)
-			let neighbors = [];
+			let neighborIndexes = [];
 			for (let j = 0; j < canvasCoordinates.length; j++) {
 				neighborIndexes = pictureItem.getAdjacentVertexIndexes(j);
 				for (const k in neighborIndexes) {

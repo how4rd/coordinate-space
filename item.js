@@ -17,6 +17,7 @@ class Item {
 		}
 
 		this.vertices = vertices;
+		this.system = vertices[0].system;
 	}
 
 	// Given an index i in this.vertices (corresponding to some vertex in the
@@ -65,7 +66,7 @@ class Item {
 	// CoordinateSystem, so that afterword the Item is the slice where
 	// z <= sliceZ.
 	slice(sliceZ) {
-		slicedVertices = [];
+		let slicedVertices = [];
 		for (let i = 0; i < this.vertices.length; i++) {
 			// If a vertex is behind the image plane, then it doesn't appear
 			// on the image plane. However, line segments connected to that
@@ -105,10 +106,16 @@ class Item {
 	// Also, projectionZ and viewpoint should be expressed in the same CoordinateSystem.
 	projectOntoPlane(projectionZ, viewpoint) {
 		if (viewpoint.system != this.system) {
-			throw new Error("The viewpoint in Item.projectOntoPlane not in the Item's CoordinateSystem.");
+			console.log("viewpoint.system:");
+			console.log(viewpoint.system);
+			console.log("this.system:");
+			console.log(this.system);
+			throw new Error("The viewpoint in Item.projectOntoPlane is not in the Item's CoordinateSystem.");
 		}
 
 		if (viewpoint.z <= projectionZ) {
+			console.log("viewpoint.z: " + viewpoint.z);
+			console.log("projectionZ: " + projectionZ);
 			throw new Error("The input into Item.projectOntoPlane does not fulfill viewpoint.z > projectionZ.");
 		}
 
@@ -116,7 +123,8 @@ class Item {
 		this.slice(projectionZ);
 
 		for (let i = 0; i < this.vertices.length; i++) {
-			this.vertices[i] = this.system.findLinePlaneIntersection(pictureItem.vertices[i], viewpoint, projectionZ);
+			this.vertices[i] = this.system.findLinePlaneIntersection(this.vertices[i],
+				viewpoint, projectionZ);
 		}
 	}
 }
@@ -141,10 +149,10 @@ class LineSegment extends Item {
 	}
 
 	copy() {
-		return new LineSegment(this.vertices.map(vertex => vertex.copy()));
+		return new LineSegment(...this.vertices.map(vertex => vertex.copy()));
 	}
 
 	copyIntoCoordinateSystem(otherSystem) {
-		return new LineSegment(this.vertices.map(vertex => vertex.copyIntoCoordinateSystem(otherSystem)));
+		return new LineSegment(...this.vertices.map(vertex => vertex.copyIntoCoordinateSystem(otherSystem)));
 	}
 }
