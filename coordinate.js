@@ -42,7 +42,7 @@ class CoordinateSystem {
 	}
 
 	// Find where the line segment between two Coordinates in the current
-	// CoordinateSystem intersects the plane z = -planeZ. Return the Coordinate
+	// CoordinateSystem intersects the plane z = planeZ. Return the Coordinate
 	// of that intersection if there is a single intersection point; otherwise
 	// return null.
 	findLinePlaneIntersection(c1, c2, planeZ) {
@@ -72,11 +72,11 @@ class CoordinateSystem {
 			// 3: cMid.z = c1.z + m(c2.z - c1.z)
 
 			// First, rearrange 3 to solve for m, noting that cMid.z = -planeZ
-			const m = (-planeZ - c1.z) / (c2.z - c1.z);
+			const m = (planeZ - c1.z) / (c2.z - c1.z);
 
 			// Then plug m into 1 and 2 to solve for its x and y coordinates
 			return new Coordinate(c1.x + m*(c2.x - c1.x),
-				c1.y + m*(c2.y - c1.y), -planeZ, this)
+				c1.y + m*(c2.y - c1.y), planeZ, this)
 		}
 	}
 }

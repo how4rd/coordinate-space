@@ -124,4 +124,14 @@ class PositionVector extends Matrix {
 				[0, 0, 0, 1]
 			])).contents;
 	}
+
+	// Translates the PositionVector by the specified x, y, z.
+	translate(x, y, z) {
+		this.contents = Matrix.multiply(this, new Matrix([
+			[1, 0, 0, 0],
+			[0, 1, 0, 0],
+			[0, 0, 1, 0],
+			[x, y, z, 1]
+		])).contents;
+	}
 }
