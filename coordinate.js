@@ -1,4 +1,4 @@
-// CoordinateSystem
+// CoordinateSystem, Coordinate classes.
 
 class CoordinateSystem {
 	// A CoordinateSystem has 3 numbers describing how much its x, y, and z axes

@@ -1,4 +1,4 @@
-// Items to display in the coordinate space (lines, points)
+// Item, Polygon, LineSegment classes.
 
 class Item {
 	// An Item takes in a list of Coordinates corresponding to vertices in the

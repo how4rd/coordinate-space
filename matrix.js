@@ -1,4 +1,4 @@
-// Matrix and PositionVector classes.
+// Matrix, Vector, and PositionVector classes.
 
 class Matrix {
 	// A 2D array with at least 1 entry is passed in to construct a Matrix.

@@ -1,7 +1,4 @@
-// https://www.scratchapixel.com/lessons/3d-basic-rendering/computing-pixel-coordinates-of-3d-point/mathematics-computing-2d-coordinates-of-3d-points?url=3d-basic-rendering/computing-pixel-coordinates-of-3d-point/mathematics-computing-2d-coordinates-of-3d-points
-
-
-// Camera
+// Camera class.
 
 class Camera {
 	// A camera has a CoordinateSystem, a distance to the image plane,
@@ -25,10 +22,12 @@ class Camera {
 		// process in the future would be adjusting this function to take
 		// pictures when order matters.
 
+		// clear the canvas
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
 		const origin = new Coordinate(0, 0, 0, this.system);
 
 		for (let i = 0; i < items.length; i++) {
-			// get the part of the Item that's in front of the camera
 			let pictureItem = items[i].copyIntoCoordinateSystem(this.system);
 
 			// map the Item onto the image plane
@@ -54,11 +53,12 @@ class Camera {
 			for (let j = 0; j < canvasCoordinates.length; j++) {
 				neighborIndexes = pictureItem.getAdjacentVertexIndexes(j);
 				for (const k in neighborIndexes) {
+					ctx.beginPath();
 					ctx.moveTo(canvasCoordinates[j][0], canvasCoordinates[j][1]);
 					ctx.lineTo(canvasCoordinates[k][0], canvasCoordinates[k][1]);
+					ctx.stroke();
 				}
 			}
-			ctx.stroke();
 		}
 	}
 }

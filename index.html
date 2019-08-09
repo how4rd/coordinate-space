@@ -7,9 +7,31 @@
 		<script src="coordinate.js"></script>
 		<script src="item.js"></script>
 		<script src="camera.js"></script>
-		<script src="render.js"></script>
 	</head>
-	<body onload="draw();">
-		<canvas id="canvas" width="200" height="200" style="border: 1px solid red;"></canvas>
+	<body>
+		<h1>Coordinate System Demo</h1>
+		<p>Code and README available at <a href="https://github.com/how4rd/coordinate-space">github.com/how4rd/coordinate-space</a></p>
+		<canvas id="canvas" width="200" height="200" style="border: 1px solid;"></canvas>
+		<h3>Controls</h3>
+		<h4>Translate</h4>
+		<dl>
+			<dt>A/D</dt>
+			<dd>x direction</dd>
+			<dt>W/S</dt>
+			<dd>y direction</dd>
+			<dt>E/Z</dt>
+			<dd>z direction</dd>
+		</dl>
+		<h4>Rotate</h4>
+		<dl>
+			<dt>U/J</dt>
+			<dd>x axis</dd>
+			<dt>I/K</dt>
+			<dd>y axis</dd>
+			<dt>O/L</dt>
+			<dd>z axis</dd>
+		</dl>
+
 	</body>
+	<script src="render.js"></script>
 </html>
