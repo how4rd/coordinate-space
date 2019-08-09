@@ -21,19 +21,19 @@ class CoordinateSystem {
 	}
 
 	// Rotate the CoordinateSystem's x axis by the specified angle relative to
-	// the world system's (positive direction given by the right-hand rule).
+	// the world system's.
 	rotateX(angle) {
 		this.xRot += angle;
 	}
 
 	// Rotate the CoordinateSystem's y axis by the specified angle relative to
-	// the world system's (positive direction given by the right-hand rule).
+	// the world system's.
 	rotateY(angle) {
 		this.yRot += angle;
 	}
 
 	// Rotate the CoordinateSystem's z axis by the specified angle relative to
-	// the world system's (positive direction given by the right-hand rule).
+	// the world system's.
 	rotateZ(angle) {
 		this.zRot += angle;
 	}
@@ -63,8 +63,9 @@ class CoordinateSystem {
 		}
 
 		// if line segment doesn't intersect plane in exactly 1 place...
-		if ((c1.z > 0 && c2.z > 0) || (c1.z == 0 && c2.z == 0) ||
-			(c1.z < 0 && c2.z < 0)) {
+		if ((c1.z > planeZ && c2.z > planeZ) ||
+			(c1.z == planeZ && c2.z == planeZ) ||
+			(c1.z < planeZ && c2.z < planeZ)) {
 			return null;
 		} else {  // line segment intersects plane in exactly 1 place
 
