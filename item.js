@@ -60,6 +60,7 @@ class Item {
 		throw new Error("Function 'copyIntoCoordinateSystem' must be implemented.");
 	}
 
+	// Helper function for project.
 	// Slice the Item with a plane occupying z = sliceZ in the Item's
 	// CoordinateSystem, so that afterword the Item is the slice where
 	// z <= sliceZ.
@@ -90,6 +91,32 @@ class Item {
 					slicedVertices += this.system.findLinePlaneIntersection(item.vertices[i], item.vertices[j], sliceZ);
 				}
 			}
+		}
+	}
+
+	// If you were viewing the Item from a Coordinate viewpoint, and a plane
+	// z = projectionZ lies between you and the Item, then the light from those
+	// vertices behind the plane will strike the plane somewhere before they
+	// reach you. So, we could move every vertex from where it really is, to
+	// where on the plane its light strikes, and the resulting image at
+	// viewpoint looks just like how it did before. Perform this "projection"
+	// of the item onto the plane.
+	// Note that the inputs must satisfy viewpoint.z > projectionZ.
+	// Also, projectionZ and viewpoint should be expressed in the same CoordinateSystem.
+	projectOntoPlane(projectionZ, viewpoint) {
+		if (viewpoint.system != this.system) {
+			throw new Error("The viewpoint in Item.projectOntoPlane not in the Item's CoordinateSystem.");
+		}
+
+		if (viewpoint.z <= projectionZ) {
+			throw new Error("The input into Item.projectOntoPlane does not fulfill viewpoint.z > projectionZ.");
+		}
+
+		// We only consider those vertices that are on or behind the plane
+		this.slice(projectionZ);
+
+		for (let i = 0; i < this.vertices.length; i++) {
+			this.vertices[i] = this.system.findLinePlaneIntersection(pictureItem.vertices[i], viewpoint, projectionZ);
 		}
 	}
 }

@@ -16,37 +16,49 @@ class Camera {
 		this.imagePlaneDistance = imagePlaneDistance;
 	}
 
-	// Take an image and output it on the given canvas.
-	snapWireframePicture(items, canvas) {
-		// Since Items are wireframes and are all the same color, the picture
-		// will look the same no matter which order we draw the Items.
-		// If Items were filled-in or different colors, more work would be
-		// required to make sure far away items appear behind closer ones.
-		// Implementing that is one way to develop this project in the future.
+	// Take a wireframe image and output it on the given canvas context.
+	snapWireframePicture(items, ctx) {
+		// NOTE: Since the image is wireframe and everything is one color,
+		// the image will look the same no matter which order we draw the Items
+		// in. This would not be true if the items were shaded in (could block
+		// each other) or were different colors. One way to continue this
+		// process in the future would be adjusting this function to take
+		// pictures when order matters.
 
-		// Iterate through each Item...
+		const origin = new Coordinate(0, 0, 0, this.system);
 
-		///// Helper function: given an Item, output an equivalent Item
-		///// representing how the original Item appears on the plane
+		for (let i = 0; i < items.length; i++) {
+			// get the part of the Item that's in front of the camera
+			let pictureItem = items[i].copyIntoCoordinateSystem(this.system);
 
-		///// 1) Find all vertices' positions in the camera's CoordinateSpace.
+			// map the Item onto the image plane
+			pictureItem.projectOntoPlane(-imagePlaneDistance, origin);
 
-		///// 2) Use this to figure out where each vertex is projected onto the
-		///// image by using PositionVector.findIntersection.
+			// map the Item's Coordinates into 2D coordinates on the canvas...
+			// In the CoordinateSystem, the image plane extends from
+			// top left: (x, y) = (-imagePlaneWidth/2, imagePlaneHeight/2)
+			// to
+			// bottom right: (x, y) = (imagePlaneWidth/2, -imagePlaneHeight/2)
+			// We must map this onto the canvas, which extends from
+			// top left: (x, y) = (0, 0)
+			// to
+			// bottom right: (x, y) = (ctx.canvas.width, ctx.canvas.height);
+			const canvasCoordinates = pictureItem.vertices.map(c =>
+				[(c.x + this.imagePlaneWidth/2) * (ctx.canvas.width/this.imagePlaneWidth),
+				(c.y - this.imagePlaneHeight/2) * (-ctx.canvas.height/this.imagePlaneHeight)]
+			);
 
-		///// 3) If a vertex is in front of the image plane, then its position
-		///// on the canvas is where the light ray from the vertex to the camera
-		///// hits the origin.
-
-		///// 4) If a vertex is behind the image plane, then it doesn't appear
-		///// on the image plane. However, line segments connected to that
-		///// vertex could still appear on the image plane. The solution to this
-		///// is to look at its neighbors (the vertices that it is connected to
-		///// with lines). If a neighbor is in front of the vertex plane, then
-		///// the line between the vertex and its neighbor intersects the image
-		///// plane somewhere. We can find exactly where using
-		///// PositionVector.findIntersection.
-
-		// draw the equivalent Item to the canvas.
+			// for each vertex, draw line segment to its neighbors
+			// note this draws each line segment twice (one for each vertex)
+			let neighbors = [];
+			for (let j = 0; j < canvasCoordinates.length; j++) {
+				neighborIndexes = pictureItem.getAdjacentVertexIndexes(j);
+				for (const k in neighborIndexes) {
+					ctx.moveTo(canvasCoordinates[j][0], canvasCoordinates[j][1]);
+					ctx.lineTo(canvasCoordinates[k][0], canvasCoordinates[k][1]);
+				}
+			}
+			ctx.stroke();
+		}
 	}
 }

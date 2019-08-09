@@ -78,6 +78,7 @@ class CoordinateSystem {
 			return new Coordinate(c1.x + m*(c2.x - c1.x),
 				c1.y + m*(c2.y - c1.y), -planeZ, this)
 		}
+	}
 }
 
 class Coordinate {
